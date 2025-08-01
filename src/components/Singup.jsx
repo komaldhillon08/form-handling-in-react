@@ -1,4 +1,7 @@
+import { useState } from "react";
+
 export default function Signup() {
+    const [passwordError, setPasswordError] = useState(false);
 
     function handleSubmit(event) {
         event.preventDefault()
@@ -7,13 +10,27 @@ export default function Signup() {
         const acquisitionChannel = fb.getAll("acquisition");
         const data = Object.fromEntries(fb.entries());
         data.acquisition = acquisitionChannel
-        console.log({fb, acquisitionChannel, data});
-        
+        console.log({ fb, acquisitionChannel, data });
+
+
+
+
+        if (data.password !== data["confirm-password"]) {
+
+            setPasswordError(true)
+
+
+
+            console.log("password and confirm");
+            return
+        }
 
         // how to reset form 
         event.target.reset();
 
     }
+
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -22,13 +39,21 @@ export default function Signup() {
 
             <div className="control">
                 <label htmlFor="email">Email</label>
-                <input id="email" type="email" name="email"  />
+                <input id="email" type="email" name="email" />
             </div>
 
             <div className="control-row">
                 <div className="control">
                     <label htmlFor="password">Password</label>
-                    <input id="password" type="password" name="password" />
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        required
+                        minLength={6}
+                        maxLength={10}
+                    />
+
                 </div>
 
                 <div className="control">
@@ -37,7 +62,13 @@ export default function Signup() {
                         id="confirm-password"
                         type="password"
                         name="confirm-password"
+                        required
+                        minLength={6}
+                        maxLength={10}
                     />
+                    <div className="control-error">
+                        {passwordError && <p>password and confirm-password is not match</p>}
+                    </div>
                 </div>
             </div>
 
