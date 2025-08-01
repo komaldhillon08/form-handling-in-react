@@ -1,10 +1,22 @@
- import { useState } from "react";
+/* import { useState } from "react";
 
 export default function Login() {
   const [enteredValue, setEnteredValue] = useState({
     email: "",
     password: ""
   });
+
+  // blur input  
+  const [didEdit, setDidEdit] = useState({
+    email: false,
+    password: false
+  });
+
+  // validation 
+  const emailIsInvalid = didEdit.email && !enteredValue.email.includes("@")
+  // const passworgIsInvalid = !enteredValue.email.includes("@")
+
+
   // submit function
   function handleSubmit(event) {
     event.preventDefault();
@@ -13,8 +25,8 @@ export default function Login() {
     console.log("user password >>>>>> " + enteredValue.password);
 
     setEnteredValue({
-      email : "",
-      password : "",
+      email: "",
+      password: "",
     })
 
   }
@@ -24,9 +36,21 @@ export default function Login() {
       ...prevValues,
       [identifier]: value
     }))
+
+    setDidEdit(prevBlur => ({
+      ...prevBlur, [identifier]: false,
+    }))
   }
   console.log(enteredValue);
-  
+
+  // blur input function 
+  function handleInputBlur(identifier) {
+    setDidEdit(prevBlur => ({
+      ...prevBlur, [identifier]: true
+    }))
+
+  }
+
 
   return (
     <form onSubmit={handleSubmit}>
@@ -39,9 +63,12 @@ export default function Login() {
             id="email"
             type="email"
             name="email"
+            onBlur={() => handleInputBlur("email")}
             onChange={(event) => handleInputChange("email", event.target.value)}
             value={enteredValue.email}
+
           />
+          <div className="control-error">{emailIsInvalid && <p>Please enter a valid email </p>}</div>
         </div>
 
         <div className="control no-margin">
@@ -54,23 +81,26 @@ export default function Login() {
             value={enteredValue.password}
 
           />
+         
+
         </div>
       </div>
 
       <p className="form-actions">
-        <button className="button button-flat">Reset</button>
+        <button type="reset" className="button button-flat">Reset</button>
         <button className="button">Login</button>
       </p>
     </form>
   );
-}
- 
+} */
+
 
 
 
 // second way using the useRef 
-/* import { useRef } from "react";
+import { useRef, useState } from "react";
 export default function Login() {
+  const [emailIsInvalid , setEmailIsInvalid] = useState();
 
   const email = useRef();
   const password = useRef();
@@ -81,11 +111,20 @@ export default function Login() {
     const enteredEmail = email.current.value;
     const enteredPassword = password.current.value;
 
-    console.log('User Email : ', enteredEmail ,"; ," ,  "User Password ; ",  enteredPassword);
+    console.log('User Email : ', enteredEmail, "; ,", "User Password ; ", enteredPassword);
+
+    const emailIsValid = enteredEmail.includes("@")
+    if (!emailIsValid) {
+      setEmailIsInvalid(true)
+      return ;
+    }
+    console.log("snding the http request ");
+    
 
 
-     email.current.value = "";
-    password.current.value = "";
+
+    /*      email.current.value = "";
+        password.current.value = ""; */
 
 
   }
@@ -104,6 +143,7 @@ export default function Login() {
             ref={email}
 
           />
+          <div className="control-error">{emailIsInvalid &&  <p>email is not valid </p> }</div>
         </div>
 
         <div className="control no-margin">
@@ -125,4 +165,4 @@ export default function Login() {
       </p>
     </form>
   );
-} */
+} 
